@@ -114,7 +114,7 @@ public class Block {
                 break;
             case 270:
                 bSwitch = true;
-                dVec = new Point(-1, 1);
+                dVec = new Point(1, -1);
                 break;
             default:
                 Log.e("WRONG TURN", "Wrong turning degree! Block::turn");
