@@ -71,7 +71,7 @@ public class MainActivity extends Activity implements BoardTouchListener {
         reset();
 
         // show the menu
-        showMenuDialog();
+        showStartMenuDialog();
 
         Button btnStep = (Button) findViewById(R.id.btnStep);
         btnStep.setOnClickListener(new OnClickListener() {
@@ -103,11 +103,10 @@ public class MainActivity extends Activity implements BoardTouchListener {
                 }
             }
         });
-        Button btnReset = (Button) findViewById(R.id.btn_menu);
-        btnReset.setOnClickListener(new OnClickListener() {
+        Button btnMenu = (Button) findViewById(R.id.btn_menu);
+        btnMenu.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                reset();
                 showMenuDialog();
             }
         });
@@ -234,7 +233,7 @@ public class MainActivity extends Activity implements BoardTouchListener {
             boardView.invalidate();
         }
     }
-    private void showMenuDialog(){
+    private void showStartMenuDialog() {
         // custom dialog
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.setContentView(R.layout.game_start);
@@ -246,10 +245,12 @@ public class MainActivity extends Activity implements BoardTouchListener {
         Button AIStart = (Button) dialog.findViewById(R.id.btn_ai_start);
 
 
+
         playerStart.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 isHumanFirst = true;
+                reset();
                 dialog.dismiss();
             }
         });
@@ -257,6 +258,48 @@ public class MainActivity extends Activity implements BoardTouchListener {
             @Override
             public void onClick(View v) {
                 isHumanFirst = false;
+                reset();
+                // have to do it here unfortunately
+                AIstep();
+                dialog.dismiss();
+                boardView.invalidate();
+            }
+        });
+        dialog.show();
+    }
+
+    private void showMenuDialog(){
+        // custom dialog
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.setContentView(R.layout.game_menu);
+        dialog.setTitle("Menu");
+        dialog.setCanceledOnTouchOutside(false);
+
+        // set the custom dialog components - text, image and button
+        Button resume = (Button) dialog.findViewById(R.id.btn_resume);
+        Button playerStart = (Button) dialog.findViewById(R.id.btn_player_start);
+        Button AIStart = (Button) dialog.findViewById(R.id.btn_ai_start);
+
+        resume.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 dialog.dismiss();
+            }
+        });
+
+        playerStart.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isHumanFirst = true;
+                reset();
+                dialog.dismiss();
+            }
+        });
+        AIStart.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isHumanFirst = false;
+                reset();
                 // have to do it here unfortunately
                 AIstep();
                 dialog.dismiss();

@@ -14,5 +14,6 @@
     <string name="txt_player_start">I want to start</string>
     <string name="txt_ai_start">Let the AI start</string>
     <string name="btn_menu">Menu</string>
+    <string name="resume">Resume</string>
 
 </resources>
