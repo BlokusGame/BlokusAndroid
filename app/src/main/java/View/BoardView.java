@@ -17,6 +17,7 @@ import blokusgame.mi.android.hazi.blokus.GameLogic.Block;
 import blokusgame.mi.android.hazi.blokus.GameLogic.Map;
 import blokusgame.mi.android.hazi.blokus.GameLogic.PlayerConstants;
 import blokusgame.mi.android.hazi.blokus.GameLogic.Point;
+import blokusgame.mi.android.hazi.blokus.R;
 
 /**
  * Created by elekt on 2014.10.04..
@@ -86,32 +87,32 @@ public class BoardView extends View {
 
     private void drawGameArea(Canvas canvas) {
         Map map = Map.getInstance();
-        // border
-        canvas.drawRect(0, 0, getWidth(), getHeight(), paintLine);
+        int margin = (int) (getResources().getDimension(R.dimen.block_margin)/2);
+        float cellsize = (getHeight()-2*margin)/map.getLineSize();
+        // borders
+        canvas.drawRect(margin, margin, getWidth()-margin, getHeight()-margin, paintLine);
 
-        for(int i=0; i<map.getLineSize(); ++i) {        // height-1 horizontal lines
-            canvas.drawLine(0, i* ((float)getHeight() / map.getLineSize()), getWidth(), i* ((float)getHeight() / map.getLineSize()),
-                    paintLine);
-
+        for(int i=0; i<map.getLineSize(); ++i) {        // horizontal lines
+            canvas.drawLine(margin, (i*cellsize)+margin, getWidth()-margin, (i*cellsize)+margin, paintLine);
         }
-
-        for(int i=0; i<map.getLineSize(); ++i) {
-            canvas.drawLine(i*((float)getWidth() / map.getLineSize()), 0, i*((float)getWidth() / map.getLineSize()), getHeight(),
-                    paintLine);
+        for(int i=0; i<map.getLineSize(); ++i) {    // drawing vertical lines
+            canvas.drawLine(i*cellsize+margin, margin, i*cellsize+margin, getHeight()-margin, paintLine);
         }
     }
 
     private void drawPlayers(Canvas canvas) {
         Map map = Map.getInstance();
+        int margin = (int) (getResources().getDimension(R.dimen.block_margin)/2);
+        float cellsize = (getHeight()-2*margin)/map.getLineSize();
 
         for(int i=0; i<map.getLineSize(); ++i){
             for(int j=0; j<map.getLineSize(); ++j){
                 int cell = map.getCell(i,j);
                 if(cell>0) {
                     paintRect.setColor(getColor(cell));
-                    int x =(int)( i * (getWidth()/map.getLineSize()));
-                    int y =(int)(j * (getHeight()/map.getLineSize()));
-                    Rect rect = new Rect(x, y, x + (int)((float)getWidth() / map.getLineSize()), y + (int)((float)getHeight() / map.getLineSize()));
+                    int x =(int)( i * cellsize);
+                    int y =(int)(j * cellsize);
+                    Rect rect = new Rect(x, y, x + (int)(cellsize), y + (int)(cellsize));
                     canvas.drawRect(rect, paintRect);
                 }
             }
