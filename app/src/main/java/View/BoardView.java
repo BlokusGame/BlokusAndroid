@@ -30,6 +30,8 @@ public class BoardView extends View {
     private Paint paintRect;
     private Paint paintCircle;
     private Paint paintOverlay;
+    private int margin;
+    private float cellsize;
 
     private ArrayList<Point> corners;
 
@@ -66,6 +68,9 @@ public class BoardView extends View {
 
         gestureDetector = new GestureDetector(context, new BoardGestureListener(this, listeners));
 
+        Map map = Map.getInstance();
+        margin = (int) (getResources().getDimension(R.dimen.block_margin)/2);
+        cellsize = (getHeight()-2*margin)/map.getLineSize();
     }
 
     @Override
@@ -76,7 +81,7 @@ public class BoardView extends View {
 
         drawGameArea(canvas);
 
-        drawPlayers(canvas);
+        drawPlayers(canvas); // TODO more clever block drawing method
 
         drawCorners(canvas);
 
@@ -87,8 +92,6 @@ public class BoardView extends View {
 
     private void drawGameArea(Canvas canvas) {
         Map map = Map.getInstance();
-        int margin = (int) (getResources().getDimension(R.dimen.block_margin)/2);
-        float cellsize = (getHeight()-2*margin)/map.getLineSize();
         // borders
         canvas.drawRect(margin, margin, getWidth()-margin, getHeight()-margin, paintLine);
 
@@ -102,8 +105,6 @@ public class BoardView extends View {
 
     private void drawPlayers(Canvas canvas) {
         Map map = Map.getInstance();
-        int margin = (int) (getResources().getDimension(R.dimen.block_margin)/2);
-        float cellsize = (getHeight()-2*margin)/map.getLineSize();
 
         for(int i=0; i<map.getLineSize(); ++i){
             for(int j=0; j<map.getLineSize(); ++j){
@@ -152,6 +153,21 @@ public class BoardView extends View {
             }
         }
 
+    }
+    // TODO draw polygon
+    private void drawBlock(Canvas canvas, int color, Point pt, Block block){
+        Map map = Map.getInstance();
+
+        paintOverlay.setColor(color);
+        for(int i = 0; i<block.getSize(); ++i){
+            Point temp = new Point(pt.x +  block.getPoint(i).x, pt.y + block.getPoint(i).y);
+            int x = (int)(temp.x * ((float)getWidth() / map.getLineSize()));
+            int y = (int)(temp.y * ((float)getHeight() / map.getLineSize()));
+
+            // drawing a rectangle of the block
+            Rect rect = new Rect(x, y, (int)(x + (getWidth()/map.getLineSize())), (int)(y + (getHeight() / map.getLineSize())));
+            canvas.drawRect(rect, paintOverlay);
+        }
     }
 
     private int getColor(int cell) {
